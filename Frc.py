@@ -1,4 +1,3 @@
-# File Frc.py
 from Reduction import Reduction
 
 class Frc():
