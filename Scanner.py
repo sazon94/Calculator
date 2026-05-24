@@ -72,7 +72,6 @@ class Scanner():
             result *= 1
 
         if Scanner._check_correct_num(number) == 'You cool man':
-            print('Correct number')
 
             number = number.replace('-', '')
 
@@ -109,9 +108,3 @@ class Scanner():
 
         else:
             return 'Is not correct number, try again!'
-
-
-
-class Main:
-    print('Enter first number: ')
-    a = Scanner.get_type_num(input())

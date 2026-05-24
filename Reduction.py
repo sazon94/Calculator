@@ -3,13 +3,14 @@ class Reduction():
 
     @staticmethod
     def _is_prime(x: int):
-        return x > 1 and all(x % d != 0 for d in range(2, int(abs(x) ** 0.5) + 1))
+        return abs(x) > 1 and all(abs(x) % d != 0 for d in range(2, int(abs(x) ** 0.5) + 1))
 
 
     @staticmethod
     def _div(x: int):
         a = set()
-        for d in range(1, int(abs(x) ** 0.5) + 1):
+        x = abs(x)
+        for d in range(1, int(x ** 0.5) + 1):
             if x % d == 0:
                 a.add(d)
                 a.add(x // d)
@@ -83,5 +84,3 @@ class Reduction():
 
         else:
             return False
-
-

@@ -4,6 +4,9 @@ class Frc():
 
 
     def __init__(self, num: int, den: int):
+        if den < 0:
+            num = -num
+            den = -den
         self.num = num
         self.den = den
 
