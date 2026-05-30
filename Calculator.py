@@ -19,11 +19,11 @@ def calc(a: str):
         if '*' in b:
             i_1 = b.index('*')
         else:
-            i_1 = 99999999
+            i_1 = 10 ** 10
         if '/' in b:
             i_2 = b.index('/')
         else:
-            i_2 = 99999999
+            i_2 = 10 ** 10
 
 
         if i_1 < i_2:
