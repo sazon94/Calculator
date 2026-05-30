@@ -1,5 +1,4 @@
-from Frc import Frc
-from Reduction import Reduction
+from Frc import Frc, Reduction
 
 
 class Scanner():
@@ -14,50 +13,68 @@ class Scanner():
         s = number.replace(',', '.')
 
         if any(x not in alf for x in s):
-            return 'You bad'
+            return False
 
         elif s == '':
-            return 'You bad'
+            return False
 
         s = s.split('/')
 
         if len(s) > 2 or len(s) == 0:
-            return 'You bad'
+            return False
 
         elif len(s) == 2 and s[-1] == '0':
-            return 'You bad'
+            return False
 
         for i in range(len(s)):
             if all(x not in integer for x in s[i]):
-                return 'You bad'
+                return False
 
             elif s[i] == '-0':
-                return 'You bad'
+                return False
 
             elif (s[i].startswith('0') and len(s[i]) != 1 and s[i][1] != '.') \
                   or (s[i].startswith('-0') and len(s[i]) > 2 and s[i][2] != '.'):
 
-                return 'You bad'
+                return False
 
             elif s[i].count('-') > 1 or s[i].count('.') > 1:
-                return 'You bad'
+                return False
 
             elif len(s[i]) == 0:
-                return 'You bad'
+                return False
 
             elif s[i].endswith('.'):
-                return 'You bad'
+                return False
 
             elif s[i].count('.-') != 0:
-                return 'You bad'
+                return False
 
             elif s[i].count('-') > 0 and s[i][0] != '-':
-                return 'You bad'
+                return False
 
             elif s[i] == '0.0':
-                return 'You bad'
+                return False
 
-        return 'You cool man'
+        return True
+
+
+    @staticmethod
+    def _check_correct_math_operation(a: str):
+        math_string = a.split()
+        math_operations = '+-/*'
+
+        if math_string[0] in math_operations or math_string[-1] in math_operations:
+            return False
+
+        elif any(not(Scanner._check_correct_num(math_string[i])) for i in range(0, len(math_string), 2)):
+            return False
+
+        elif any(len(math_string[i]) != 1 for i in range(1, len(math_string), 2)):
+            return False
+
+        return True
+
 
 
     @staticmethod
@@ -71,7 +88,7 @@ class Scanner():
         else:
             result *= 1
 
-        if Scanner._check_correct_num(number) == 'You cool man':
+        if Scanner._check_correct_num(number):
 
             number = number.replace('-', '')
 
@@ -86,14 +103,10 @@ class Scanner():
 
                 return float(number) * result
 
-            elif Reduction._is_fraction(number):
+            elif Frc._is_fraction(number):
                 reduction = Reduction._to_reduction(number)
 
-                if count_minus % 2 == 0:
-                    return Frc(reduction[0], reduction[1])
-
-                else:
-                    return Frc(reduction[0] * result, reduction[1])
+                return Frc(reduction[0] * result, reduction[1])
 
             else:
 

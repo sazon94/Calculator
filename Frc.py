@@ -1,4 +1,60 @@
-from Reduction import Reduction
+class Reduction():
+
+
+    @staticmethod
+    def _is_prime(x: int):
+        return abs(x) > 1 and all(abs(x) % d != 0 for d in range(2, int(abs(x) ** 0.5) + 1))
+
+
+    @staticmethod
+    def _div(x: int):
+        a = set()
+        x = abs(x)
+        for d in range(1, int(x ** 0.5) + 1):
+            if x % d == 0:
+                a.add(d)
+                a.add(x // d)
+
+        return sorted(a)
+
+
+    @staticmethod
+    def _to_reduction(x: str):
+        x = x.split('/')
+        num = 0
+        den = 0
+
+        if x[0].count('.') != 0 or x[1].count('.') != 0:
+            new_x0 = x[0].split('.')
+            new_x1 = x[1].split('.')
+
+            ten = max(10 ** len(new_x0[1]), 10 ** len(new_x1[1]))
+            num = int(float(x[0]) * ten)
+            den = int(float(x[1]) * ten)
+
+        else:
+            num = int(x[0])
+            den = int(x[1])
+
+        a = []
+
+        dividers_num = Reduction._div(num)
+        dividers_den = Reduction._div(den)
+
+        common_divisors = [x for x in dividers_num if x in dividers_den]
+
+        if len(common_divisors):
+            num //= common_divisors[-1]
+            den //= common_divisors[-1]
+
+        else:
+            pass
+
+        a.append(num)
+        a.append(den)
+
+        return a
+
 
 class Frc():
 
@@ -22,15 +78,17 @@ class Frc():
             den = 1
 
         elif tp == float:
-            if 'e' not in str(number):
-                ten = 10 ** len(str(number).split('.')[1])
-                num = round(number * ten)
-                den = 1 * ten
+            number = str(number)
+
+            if 'e' in number:
+                a = number.split('e')
+                num = int(a[0].replace('.', ''))
+                den = 10 ** (int(a[1].replace('-', '')) + len(a[0].replace('.', '')) - 1)
 
             else:
-                ten = 10 ** int(str(number)[-2:])
-                num = round(number * ten)
-                den = 1 * ten
+                ten = 10 ** len(str(number).split('.')[1])
+                num = int(float(number) * ten)
+                den = ten
 
         return Frc(num, den)
 
@@ -54,7 +112,7 @@ class Frc():
 
 
     def __str__(self):
-        if Reduction._is_fraction(f'{self.num}/{self.den}'):
+        if Frc._is_fraction(f'{self.num}/{self.den}'):
 
             number = Frc._get_whole_part(self.num, self.den)
 
@@ -75,7 +133,35 @@ class Frc():
                     return f'{number[0]}'
 
         else:
+
+            if 'e' in str(self.num / self.den):
+
+                number = str(self.num / self.den).split('e-')
+                num = int(number[0].replace('.', ''))
+                den = 1 * (int(number[1]) - 1)
+
+                return '0.' + '0' * den + str(num)
+
             return f'{int(self.num / self.den)}' if str(self.num / self.den).endswith('.0') else f'{self.num / self.den}'
+
+
+    @staticmethod
+    def _is_fraction(x: str):
+        a = Reduction._to_reduction(x)
+
+        dividers_denominator = [x for x in Reduction._div(int(a[-1])) if Reduction._is_prime(x)]
+
+        if len(dividers_denominator) == 0:
+            return False
+
+        elif int(a[-2]) % int(a[-1]) == 0:
+            return False
+
+        elif any(i not in (2, 5) for i in dividers_denominator):
+            return True
+
+        else:
+            return False
 
 
     def __add__(self, other):
