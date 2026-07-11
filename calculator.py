@@ -118,4 +118,5 @@ def main():
             print('Dividing by zero is a mistake in mathematics!')
 
 
-main()
+if __name__ == '__main__':
+    main()
