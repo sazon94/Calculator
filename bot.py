@@ -4,6 +4,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart
 from calculator import calc, correct_opening_of_brackets
 from scanner import Scanner
+from aiohttp import web
 
 TOKEN = os.getenv('BOT_TOKEN')
 bot = Bot(token=TOKEN)
@@ -39,25 +40,25 @@ async def calculate_message(message: types.Message):
         print(f'Лог ошибки: {e}')
 
 
-async def run_once():
-    await bot.delete_webhook(drop_pending_updates=False)
+async def handle_index(request):
+    return web.Response(text="Bot is running!")
 
 
-    updates = await bot.get_updates(offset=-1, limit=100, timeout=1)
+async def main():
+    app = web.Application()
+    app.router.add_get('/', handle_index)
+    runner = web.AppRunner(app)
+    await runner.setup()
 
-    if updates:
+    port = int(os.getenv("PORT", 8080))
+    site = web.TCPSite(runner, "0.0.0.0", port)
+    asyncio.create_task(site.start())
 
-        next_offset = updates[-1].update_id + 1
-
-        await dp.feed_webhook_update(bot, updates[0])
-        for update in updates:
-            await dp.feed_update(bot, update)
-
-        await bot.get_updates(offset=next_offset, limit=1, timeout=1)
+    print(f"Dummy web server started on port {port}")
 
 
-    await bot.session.close()
-
+    print("Starting bot polling...")
+    await dp.start_polling(bot)
 
 if __name__ == '__main__':
-    asyncio.run(run_once())
+    asyncio.run(main())
