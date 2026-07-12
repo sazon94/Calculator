@@ -116,19 +116,22 @@ class Frc():
 
     @staticmethod
     def _is_fraction(x: str):
-        number = Reduction._to_reduction(x)
+        if '/' in x:
+            number = Reduction._to_reduction(x)
 
-        dividers_denominator = [x for x in Reduction._div(int(number[-1])) if Reduction._is_prime(x)]
+            dividers_denominator = [x for x in Reduction._div(int(number[-1])) if Reduction._is_prime(x)]
 
-        if len(dividers_denominator) == 0:
-            return False
+            if len(dividers_denominator) == 0:
+                return False
 
-        elif int(number[-2]) % int(number[-1]) == 0:
-            return False
+            elif int(number[-2]) % int(number[-1]) == 0:
+                return False
 
-        elif any(i not in (2, 5) for i in dividers_denominator):
-            return True
+            elif any(i not in (2, 5) for i in dividers_denominator):
+                return True
 
+            else:
+                return False
         else:
             return False
 
