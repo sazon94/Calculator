@@ -119,19 +119,24 @@ class Frc():
         if '/' in x:
             number = Reduction._to_reduction(x)
 
-            dividers_denominator = [x for x in Reduction._div(int(number[-1])) if Reduction._is_prime(x)]
+            num = number[-2]
+            den = number[-1]
 
-            if len(dividers_denominator) == 0:
+            if num % den == 0:
                 return False
 
-            elif int(number[-2]) % int(number[-1]) == 0:
+            if den == 0:
                 return False
 
-            elif any(i not in (2, 5) for i in dividers_denominator):
-                return True
+            den = abs(den)
 
-            else:
-                return False
+            while den % 2 == 0:
+                den //= 2
+
+            while den % 5 == 0:
+                den //= 5
+
+            return den != 1
         else:
             return False
 

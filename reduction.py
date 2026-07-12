@@ -1,24 +1,15 @@
 class Reduction():
 
-    # Checking for finding prime numbers
-
+    # Euclid's algorithm
     @staticmethod
-    def _is_prime(x: int):
-        return abs(x) > 1 and all(abs(x) % d != 0 for d in range(2, int(abs(x) ** 0.5) + 1))
+    def _gcd(a, b):
+        a = abs(a)
+        b = abs(b)
 
+        while b > 0:
+            a, b = b, a % b
 
-    # Finding all the divisors of a number
-
-    @staticmethod
-    def _div(x: int):
-        dividers = set()
-        x = abs(x)
-        for d in range(1, int(x ** 0.5) + 1):
-            if x % d == 0:
-                dividers.add(d)
-                dividers.add(x // d)
-
-        return sorted(dividers)
+        return a
 
 
     @staticmethod
@@ -52,20 +43,10 @@ class Reduction():
             num = int(number[0])
             den = int(number[1])
 
-        # Finding the divisors of the numerator and denominator
+        nod = Reduction._gcd(num, den)
 
-        dividers_num = Reduction._div(num)
-        dividers_den = Reduction._div(den)
-
-        # Finding common divisors of the numerator and denominator to reduce the fraction
-
-        common_divisors = [x for x in dividers_num if x in dividers_den]
-
-        # Reducing the numerator and denominator by the maximum common divisor
-
-        if len(common_divisors):
-            num //= common_divisors[-1]
-            den //= common_divisors[-1]
+        num //= nod
+        den //= nod
 
         result.append(num)
         result.append(den)
