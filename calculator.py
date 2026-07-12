@@ -97,6 +97,34 @@ def correct_opening_of_brackets(mathematical_example: str):
     return new_mathematical_string
 
 
+def format_result(result):
+    result_str = str(result)
+
+    if Frc._is_fraction(result_str):
+
+        numerator, denominator = map(int, result_str.split('/'))
+
+        whole, num, den = Frc._get_whole_part(numerator, denominator)
+
+        if whole != 0:
+
+            if whole > 0:
+
+                return f'{whole} + {num}/{den}'
+
+            else:
+
+                return f'-({abs(whole)} + {abs(num)}/{den})'
+
+        else:
+
+            return f'{num}/{den}'
+
+    else:
+
+        return result_str
+
+
 def main():
     print('Enter a mathematical example: ')
     math_example = input()
@@ -112,7 +140,9 @@ def main():
 
         try:
             result = calc(correct_opening_of_brackets(math_example))
-            print(result)
+            pretty_result = format_result(result)
+
+            print(pretty_result)
 
         except ZeroDivisionError:
             print('Dividing by zero is a mistake in mathematics!')
