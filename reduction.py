@@ -35,6 +35,11 @@ class Reduction():
             new_x0 = number[0].split('.')
             new_x1 = number[1].split('.')
 
+            if len(new_x0) == 1:
+                new_x0.append('')
+            if len(new_x1) == 1:
+                new_x1.append('')
+
             # Converting a fraction with decimal numbers into a fraction with whole numbers
 
             ten = max(10 ** len(new_x0[1]), 10 ** len(new_x1[1]))
